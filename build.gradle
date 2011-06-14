@@ -11,7 +11,7 @@ repositories {
     ]
 }
 dependencies {
-    groovy 'org.codehaus.groovy:groovy:1.7.3'
+    groovy 'org.codehaus.groovy:groovy:1.8.0'
     testCompile 'junit:junit:4.7'
 }
 
@@ -33,7 +33,8 @@ compileTestGroovy {
 
 test.doLast {
     if (Boolean.valueOf(System.properties["showReport"])) {
-        'open build/reports/tests/index.html'.execute()
+        def file = new File("$buildDir/reports/tests/index.html")
+        java.awt.Desktop.desktop.browse(file.toURI())
     }
 }
 
