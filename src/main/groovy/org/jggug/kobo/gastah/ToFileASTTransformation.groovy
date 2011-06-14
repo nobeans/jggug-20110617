@@ -13,10 +13,13 @@ import static org.objectweb.asm.Opcodes.*
 class ToFileASTTransformation extends ClassCodeVisitorSupport implements ASTTransformation {
 
     SourceUnit sourceUnit   // forced to override by super class
+    final static Set<Class> visitedClass = new HashSet<Class>().asSynchronized()
 
     public void visit(ASTNode[] nodes, SourceUnit source) {
         AnnotatedNode targetClass = (AnnotatedNode) nodes[1]
         AnnotationNode includeAnnotation = (AnnotationNode) nodes[0]
+
+        if (visitedClass.contains(targetClass)) return
 
         targetClass.addMethod(new AstBuilder().buildFromSpec {
             method('xprintln', Opcodes.ACC_PUBLIC, Void.class) {
@@ -35,6 +38,8 @@ class ToFileASTTransformation extends ClassCodeVisitorSupport implements ASTTran
                 annotations {}
             }
         }[0])
+
+        visitedClass.add(targetClass)
     }
 
 }
