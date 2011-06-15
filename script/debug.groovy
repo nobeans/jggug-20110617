@@ -1,3 +1,5 @@
+#!/usr/bin/env groovyclient -Cenv DEBUG -cp ../build/classes/main
+
 import org.jggug.kobo.gastah.*
 
 println "Begin..."

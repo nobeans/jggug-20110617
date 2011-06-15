@@ -1,3 +1,5 @@
+#!/usr/bin/env groovyclient -Cenv HOGE -cp ../build/classes/main
+
 import org.jggug.kobo.gastah.*
 
 @IfDef("HOGE")
