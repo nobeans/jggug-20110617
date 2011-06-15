@@ -31,7 +31,7 @@ class ForLearningASTTransformation extends ClassCodeVisitorSupport implements AS
 
         //def additionNode = new AstBuilder().buildFromCode({
         //    // 明示的なreturnが内場合には、暗黙のreturn(ReturnBlock)になってしまう
-        //    // →既存コードにステートメント追加しても後続の処理が継続しない
+        //    // →既存コードにステートメント追加しても後続の処理が継続しない(suppresseReturnStatementを使えばOK)
         //    println "XXX:"
         //})[0]
 
@@ -43,19 +43,7 @@ class ForLearningASTTransformation extends ClassCodeVisitorSupport implements AS
             println "ZZZ!"
             return null // 明示的returnがあれば、それ以前のステートメントがReturnBlockになることはない
         })[0]
-        def additionStatements = additionNode.statements
-        if (additionStatements.size() >= 2) { // 最後のReturnBlockは使わない場合
-            additionStatements = additionStatements[0..-2]
-        }
-        def additionStatement = new BlockStatement(additionStatements, new VariableScope())
-
-        //def additionVariable = new AstBuilder().buildFromSpec({
-        //    declaration {
-        //       variable "xprintln"
-        //       token "="
-        //       {-> println "FOOOOOOOOOOOOOO!" }()
-        //   }
-        //})
+        def additionStatement = suppresseReturnStatement(additionNode)
 
         // ブロック先頭への追加
         //source.getAST().getStatementBlock().getStatements().addAll(0, additionStatement)
@@ -77,7 +65,7 @@ class ForLearningASTTransformation extends ClassCodeVisitorSupport implements AS
         }
     }
 
-    void dump(nodes, source) {
+    private void dump(nodes, source) {
         def target = (AnnotatedNode) nodes[1]
         def includeAnnotation = (AnnotationNode) nodes[0]
         def printWithIndent = { println " "*4 + it }
@@ -95,10 +83,18 @@ class ForLearningASTTransformation extends ClassCodeVisitorSupport implements AS
         println "<"*50
     }
 
-    void dump(Statement stmt) {
+    private void dump(Statement stmt) {
         println "${stmt.class.simpleName}: ["
         stmt.properties.each printWithIndent
         println "]"
+    }
+
+    private suppresseReturnStatement(BlockStatement block) {
+        if (block.statements.last() in ReturnStatement) {
+            def replacement = new ExpressionStatement(block.statements.last().expression)
+            block.statements.putAt(block.statements.size() - 1, replacement)
+        }
+        return block
     }
 }
 
