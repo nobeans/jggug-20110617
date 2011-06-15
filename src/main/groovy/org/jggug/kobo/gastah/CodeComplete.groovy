@@ -39,6 +39,19 @@ class CodeCompleteASTTransformation extends ClassCodeVisitorSupport implements A
         if ("helloworld".startsWith(variableName.toLowerCase())) {
             return suppresseReturnStatement(new AstBuilder().buildFromCode({ println("Hello, World!") })[0])
         }
+        if ("programminggroovy".startsWith(variableName.toLowerCase())) {
+            return suppresseReturnStatement(new AstBuilder().buildFromCode({
+                println("プログラミングGroovy、7/6(水)発売予定!")
+                println("Amazonで絶賛予約受付中!")
+                println("http://www.amazon.co.jp/dp/4774147273")
+            })[0])
+        }
+        if ("goamazon".startsWith(variableName.toLowerCase())) {
+            return suppresseReturnStatement(new AstBuilder().buildFromCode({
+                java.awt.Desktop.desktop.browse("http://www.amazon.co.jp/dp/4774147273".toURI())
+
+            })[0])
+        }
         return target
     }
 
