@@ -3,12 +3,6 @@ defaultTasks 'test'
 
 repositories {
     mavenCentral()
-    mavenRepo urls: [
-        //"file://${System.properties['user.home']}/.m2/repository/",
-        //"http://snapshots.repository.codehaus.org/",
-        "http://repository.codehaus.org/",
-        "http://jansi.fusesource.org/repo/release", // which is needed by groovy 1.7.1??
-    ]
 }
 dependencies {
     groovy 'org.codehaus.groovy:groovy:1.8.0'
